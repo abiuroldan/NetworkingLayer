@@ -9,11 +9,19 @@ import UIKit
 import RestAPI
 
 final class HomeViewController: NiblessViewController {
-    let manager = NetworkManager()
+    let api: PokemonListRemote = PokemonListRemoteAPI()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        manager.configuration()
+        Task(priority: .background) {
+            await api.fullPokemonList(type: PokemonList.self, request: .fullLIst) { response in
+                guard let response else {
+                    print("no response")
+                    return
+                }
+                print("Response from BE \(response)")
+            }
+        }
     }
 }
