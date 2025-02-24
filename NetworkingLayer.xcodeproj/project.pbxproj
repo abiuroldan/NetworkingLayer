@@ -10,6 +10,9 @@
 		1E2E4EE92D6AA0F900A583A3 /* RestAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2E4EE12D6AA0F900A583A3 /* RestAPI.framework */; };
 		1E2E4EF42D6AA0F900A583A3 /* RestAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2E4EE12D6AA0F900A583A3 /* RestAPI.framework */; };
 		1E2E4EF52D6AA0F900A583A3 /* RestAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2E4EE12D6AA0F900A583A3 /* RestAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EC0D3A22D6C1251009E65DF /* Injected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0D3A12D6C1250009E65DF /* Injected.swift */; };
+		1EC0D3A52D6C12EE009E65DF /* InjectionKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0D3A42D6C12EC009E65DF /* InjectionKeys.swift */; };
+		1EC0D3A72D6C1308009E65DF /* InjectedValues+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0D3A62D6C1306009E65DF /* InjectedValues+extension.swift */; };
 		2971A3FF2D696DE3006D1844 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2971A3FE2D696DE3006D1844 /* AppDelegate.swift */; };
 		2971A4012D696DE3006D1844 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2971A4002D696DE3006D1844 /* SceneDelegate.swift */; };
 		2971A4062D696DE3006D1844 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2971A4042D696DE3006D1844 /* Main.storyboard */; };
@@ -78,6 +81,9 @@
 /* Begin PBXFileReference section */
 		1E2E4EE12D6AA0F900A583A3 /* RestAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RestAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E2E4EE82D6AA0F900A583A3 /* RestAPITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RestAPITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EC0D3A12D6C1250009E65DF /* Injected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Injected.swift; sourceTree = "<group>"; };
+		1EC0D3A42D6C12EC009E65DF /* InjectionKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InjectionKeys.swift; sourceTree = "<group>"; };
+		1EC0D3A62D6C1306009E65DF /* InjectedValues+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InjectedValues+extension.swift"; sourceTree = "<group>"; };
 		2971A3FB2D696DE3006D1844 /* NetworkingLayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkingLayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2971A3FE2D696DE3006D1844 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2971A4002D696DE3006D1844 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -151,6 +157,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EC0D3A32D6C12CD009E65DF /* DI */ = {
+			isa = PBXGroup;
+			children = (
+				1EC0D3A62D6C1306009E65DF /* InjectedValues+extension.swift */,
+				1EC0D3A42D6C12EC009E65DF /* InjectionKeys.swift */,
+			);
+			path = DI;
+			sourceTree = "<group>";
+		};
 		2971A3F22D696DE3006D1844 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +193,8 @@
 		2971A3FD2D696DE3006D1844 /* NetworkingLayer */ = {
 			isa = PBXGroup;
 			children = (
+				1EC0D3A32D6C12CD009E65DF /* DI */,
+				1EC0D3A12D6C1250009E65DF /* Injected.swift */,
 				29FBE6512D6976D600630555 /* Resources */,
 				2971A3FE2D696DE3006D1844 /* AppDelegate.swift */,
 				2971A4002D696DE3006D1844 /* SceneDelegate.swift */,
@@ -446,7 +463,10 @@
 			files = (
 				2971A3FF2D696DE3006D1844 /* AppDelegate.swift in Sources */,
 				29FBE6552D69771500630555 /* NiblessViewController.swift in Sources */,
+				1EC0D3A72D6C1308009E65DF /* InjectedValues+extension.swift in Sources */,
+				1EC0D3A22D6C1251009E65DF /* Injected.swift in Sources */,
 				2971A4012D696DE3006D1844 /* SceneDelegate.swift in Sources */,
+				1EC0D3A52D6C12EE009E65DF /* InjectionKeys.swift in Sources */,
 				29FBE6532D6976FA00630555 /* NiblessView.swift in Sources */,
 				29FBE6572D69774900630555 /* HomeViewController.swift in Sources */,
 			);
