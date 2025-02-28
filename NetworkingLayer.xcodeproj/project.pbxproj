@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2971A3FF2D696DE3006D1844 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2971A3FE2D696DE3006D1844 /* AppDelegate.swift */; };
-		2971A4012D696DE3006D1844 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2971A4002D696DE3006D1844 /* SceneDelegate.swift */; };
 		2971A4032D696DE3006D1844 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2971A4022D696DE3006D1844 /* ViewController.swift */; };
 		2971A4062D696DE3006D1844 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2971A4042D696DE3006D1844 /* Main.storyboard */; };
 		2971A4082D696DE5006D1844 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2971A4072D696DE5006D1844 /* Assets.xcassets */; };
@@ -37,8 +35,6 @@
 
 /* Begin PBXFileReference section */
 		2971A3FB2D696DE3006D1844 /* NetworkingLayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkingLayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2971A3FE2D696DE3006D1844 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2971A4002D696DE3006D1844 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2971A4022D696DE3006D1844 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2971A4052D696DE3006D1844 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2971A4072D696DE5006D1844 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -50,6 +46,14 @@
 		2971A41F2D696DE5006D1844 /* NetworkingLayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLayerUITests.swift; sourceTree = "<group>"; };
 		2971A4212D696DE5006D1844 /* NetworkingLayerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingLayerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		1EF9C7DC2D715A5E001E897B /* Coordinators */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Coordinators; sourceTree = "<group>"; };
+		1EF9C7E02D715A71001E897B /* Modules */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Modules; sourceTree = "<group>"; };
+		1EF9C7E12D715A83001E897B /* Services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Services; sourceTree = "<group>"; };
+		1EF9C7E52D715A9F001E897B /* Utilities */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Utilities; sourceTree = "<group>"; };
+		1EF9C7E62D716471001E897B /* Mocks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Mocks; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2971A3F82D696DE3006D1844 /* Frameworks */ = {
@@ -99,8 +103,10 @@
 		2971A3FD2D696DE3006D1844 /* NetworkingLayer */ = {
 			isa = PBXGroup;
 			children = (
-				2971A3FE2D696DE3006D1844 /* AppDelegate.swift */,
-				2971A4002D696DE3006D1844 /* SceneDelegate.swift */,
+				1EF9C7E52D715A9F001E897B /* Utilities */,
+				1EF9C7E12D715A83001E897B /* Services */,
+				1EF9C7E02D715A71001E897B /* Modules */,
+				1EF9C7DC2D715A5E001E897B /* Coordinators */,
 				2971A4022D696DE3006D1844 /* ViewController.swift */,
 				2971A4042D696DE3006D1844 /* Main.storyboard */,
 				2971A4072D696DE5006D1844 /* Assets.xcassets */,
@@ -113,6 +119,7 @@
 		2971A4142D696DE5006D1844 /* NetworkingLayerTests */ = {
 			isa = PBXGroup;
 			children = (
+				1EF9C7E62D716471001E897B /* Mocks */,
 				2971A4152D696DE5006D1844 /* NetworkingLayerTests.swift */,
 			);
 			path = NetworkingLayerTests;
@@ -142,6 +149,12 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				1EF9C7DC2D715A5E001E897B /* Coordinators */,
+				1EF9C7E02D715A71001E897B /* Modules */,
+				1EF9C7E12D715A83001E897B /* Services */,
+				1EF9C7E52D715A9F001E897B /* Utilities */,
+			);
 			name = NetworkingLayer;
 			productName = NetworkingLayer;
 			productReference = 2971A3FB2D696DE3006D1844 /* NetworkingLayer.app */;
@@ -159,6 +172,9 @@
 			);
 			dependencies = (
 				2971A4132D696DE5006D1844 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				1EF9C7E62D716471001E897B /* Mocks */,
 			);
 			name = NetworkingLayerTests;
 			productName = NetworkingLayerTests;
@@ -259,8 +275,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2971A4032D696DE3006D1844 /* ViewController.swift in Sources */,
-				2971A3FF2D696DE3006D1844 /* AppDelegate.swift in Sources */,
-				2971A4012D696DE3006D1844 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
