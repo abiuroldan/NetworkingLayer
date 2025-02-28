@@ -12,24 +12,18 @@ public class NetworkManager {
     private let urlSession = URLSession(configuration: .ephemeral)
     private init() {}
     
-    func makeCall<T: Decodable>(request: NetworkRequest, decodeTo type: T.Type, completion: @escaping (T?) -> Void) async {
+    func makeCall<T: Decodable>(request: NetworkRequest, decodeTo type: T.Type, completion: @escaping (Result<T, NetworkError>) -> Void) async {
         if #available(iOS 15.0, *) {
             do {
                 let data: T = try await perform(request, decodeTo: T.self)
-                completion(data)
+                completion(.success(data))
             } catch {
                 print("Failed to fech data \(error)")
-                completion(nil)
+                completion(.failure(error as? NetworkError ?? .invalidResponse))
             }
         } else {
             perform(request, decodeTo: T.self) { result in
-                switch result {
-                case .success(let data):
-                    completion(data)
-                case .failure(let error):
-                    print("Failed to fech data \(error)")
-                    completion(nil)
-                }
+                completion(result)
             }
         }
     }
@@ -57,7 +51,9 @@ public class NetworkManager {
 
     private func decodeData<T: Decodable>(data: Data, type: T.Type) throws -> T {
         do {
-            let decodedObject = try JSONDecoder().decode(T.self, from: data)
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let decodedObject = try decoder.decode(T.self, from: data)
             return decodedObject
         } catch let decodingError {
             throw NetworkError.decodingFailed(decodingError)
