@@ -10,6 +10,7 @@ import UIKit
 final class AppCoordinator: Coordinator {
     private let navigationController = UINavigationController()
     private var window: UIWindow?
+    private var childCoordinators = [Coordinator]()
 
     init(window: UIWindow?) {
         guard let window else {
@@ -21,9 +22,11 @@ final class AppCoordinator: Coordinator {
     }
 
     func start() {
-        let homeController = ViewController()
-        homeController.view.backgroundColor = .background
-        navigationController.pushViewController(homeController, animated: false)
+        let homeCoordinator = HomeCoordinator(
+            navigationController: navigationController
+        )
+        childCoordinators.append(homeCoordinator)
+        homeCoordinator.start()
     }
 }
 
@@ -42,13 +45,13 @@ extension AppCoordinator {
         var window: UIWindow? {
             target.window
         }
-        
-        var navigationController: UIViewController {
-            target.navigationController
-        }
 
         var viewControllers: [UIViewController] {
             target.navigationController.viewControllers
+        }
+
+        var childCoordinators: [Coordinator] {
+            target.childCoordinators
         }
     }
 }

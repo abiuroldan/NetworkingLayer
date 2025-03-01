@@ -10,10 +10,11 @@ import UIKit
 
 final class AppCoordinatorMock: Coordinator {
     private let navigationController = UINavigationController()
+    private let windowSceneMock = WindowSceneMock()
     private var window: UIWindow?
 
-    init(window: UIWindow?) {
-        self.window = window
+    init() {
+        self.window = windowSceneMock.windows.first
         window?.makeKeyAndVisible()
         window?.rootViewController = navigationController
     }
@@ -22,5 +23,9 @@ final class AppCoordinatorMock: Coordinator {
         let viewController = UIViewController()
         viewController.view.backgroundColor = .background
         navigationController.pushViewController(viewController, animated: false)
+    }
+
+    func navController() -> UINavigationController {
+        navigationController
     }
 }
