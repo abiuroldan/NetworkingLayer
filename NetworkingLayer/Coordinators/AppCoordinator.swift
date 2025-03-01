@@ -22,7 +22,7 @@ final class AppCoordinator: Coordinator {
 
     func start() {
         let homeController = ViewController()
-        homeController.view.backgroundColor = .white
+        homeController.view.backgroundColor = .background
         navigationController.pushViewController(homeController, animated: false)
     }
 }
