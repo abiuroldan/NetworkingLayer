@@ -19,13 +19,37 @@ final class NetworkingLayerTests: XCTestCase {
         windowSceneMock = nil
     }
 
-    func testEmptyWindow() throws {
+    func testNoStartingAppCoordinator() throws {
+        let window = windowSceneMock?.windows.first
+        let appCoordinator = AppCoordinator(window: window)
+
+        XCTAssertNotNil(appCoordinator.testValues.window)
+        XCTAssertTrue(appCoordinator.testValues.viewControllers.isEmpty)
+        XCTAssertTrue(appCoordinator.testValues.childCoordinators.isEmpty)
+    }
+
+    func testStartingAppCoordinator() {
         let window = windowSceneMock?.windows.first
         let appCoordinator = AppCoordinator(window: window)
         appCoordinator.start()
 
-        XCTAssertNotNil(window)
+        XCTAssertNotNil(appCoordinator.testValues.window)
         XCTAssert(appCoordinator.testValues.viewControllers.isNotEmpty)
-        XCTAssert(appCoordinator.testValues.viewControllers.count > 0)
+        XCTAssert(appCoordinator.testValues.childCoordinators.count == 1)
+    }
+
+    func testNotStartingHomeCoordinator() {
+        let appCoordinatorMock = AppCoordinatorMock()
+        let homeCoordinator = HomeCoordinator(navigationController: appCoordinatorMock.navController())
+
+        XCTAssertTrue(homeCoordinator.testValues.childControllers.isEmpty)
+    }
+
+    func testStartingHomeCoordinator() {
+        let appCoordinatorMock = AppCoordinatorMock()
+        let homeCoordinator = HomeCoordinator(navigationController: appCoordinatorMock.navController())
+        homeCoordinator.start()
+
+        XCTAssertTrue(homeCoordinator.testValues.childControllers.isNotEmpty)
     }
 }
