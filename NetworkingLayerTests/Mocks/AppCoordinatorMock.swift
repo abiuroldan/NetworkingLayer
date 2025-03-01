@@ -20,7 +20,7 @@ final class AppCoordinatorMock: Coordinator {
 
     func start() {
         let viewController = UIViewController()
-        viewController.view.backgroundColor = .white
+        viewController.view.backgroundColor = .background
         navigationController.pushViewController(viewController, animated: false)
     }
 }
