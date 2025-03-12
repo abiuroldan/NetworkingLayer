@@ -5,4 +5,10 @@
 //  Created by Abiú Ramírez Roldán on 28/02/25.
 //
 
-protocol HomeViewModelProtocol: ViewModel {}
+import Combine
+import NetworkingServiceManager
+
+protocol HomeViewModelProtocol: ViewModel {
+    func fetchPokemonList()
+    var pokemonListPublisher: Published<FullLIstPokemon?>.Publisher { get }
+}

@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import Combine
 
-final class HomeViewController: NiblessViewController {
+final class HomeViewController<model: HomeViewModelProtocol>: NiblessViewController {
     private let rootView = HomeRootView()
-    private let viewModel: HomeViewModelProtocol
+    private var viewModel: model
 
-    init(viewModel: HomeViewModelProtocol) {
+    init(viewModel: model) {
         self.viewModel = viewModel
         super.init()
     }
@@ -22,5 +23,22 @@ final class HomeViewController: NiblessViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel
+            .isLoading
+            .sink { _ in
+                
+            }
+            .store(in: &viewModel.cancellables)
+
+        viewModel.fetchPokemonList()
+
+        viewModel.pokemonListPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+
+            }
+            .store(in: &viewModel.cancellables)
     }
 }
+
