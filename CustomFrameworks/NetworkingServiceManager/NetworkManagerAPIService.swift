@@ -5,13 +5,19 @@
 //  Created by Abiú Ramírez Roldán on 02/03/25.
 //
 
-public final class NetworkManagerAPIService: NetworkManagerAPI {
-    private let network = NetworkManager()
-    public init() {}
+import Combine
 
-    public func fullPokemonList(request: APIRequestType, _ completion: @escaping (Result<PokemonList, NetworkError>) -> ()) async {
-        await network.makeCall(request: request, PokemonList.self) { result in
-            completion(result)
-        }
+public final class NetworkManagerAPIService: NetworkManagerAPI {
+    private var network: NetworkingManagerService
+    public init() {
+        network = NetworkManager()
+    }
+
+    convenience init(network: NetworkingManagerService) {
+        self.init()
+        self.network = network
+    }
+    public func fetchPokemonList<T: Decodable>(request: APIRequestType) async throws -> AnyPublisher<T, NetworkError> {
+        try network.fetchData(request, type: T.self)
     }
 }

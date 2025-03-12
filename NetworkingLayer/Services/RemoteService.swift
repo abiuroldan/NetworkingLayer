@@ -5,24 +5,19 @@
 //  Created by Abiú Ramírez Roldán on 27/02/25.
 //
 
+import Combine
 import NetworkingServiceManager
 
-
 final class RemoteService: RemoteServiceAPI {
-    let remoteAPI = NetworkManagerAPIService()
+    let remoteAPI: NetworkManagerAPI
     
-    func fullPokemonList(_ completion: @escaping (Result<FullLIstPokemon, NetworkError>) -> ()) {
-        Task {
-            await remoteAPI.fullPokemonList(request: .full) { result in
-                switch result {
-                case .success(let data):
-                    let pokemonList = FullLIstPokemon(data: data)
-                    completion(.success(pokemonList))
-                case .failure(let error):
-                    print(error)
-                    completion(.failure(error))
-                }
-            }
-        }
+    init(remoteAPI: NetworkManagerAPI = NetworkManagerAPIService()) {
+        self.remoteAPI = remoteAPI
+    }
+
+    func fetchPokemonList() async throws -> AnyPublisher<FullLIstPokemon, NetworkError>  {
+        try await remoteAPI.fetchPokemonList(request: .full)
+            .map { FullLIstPokemon(data: $0) }
+            .eraseToAnyPublisher()
     }
 }

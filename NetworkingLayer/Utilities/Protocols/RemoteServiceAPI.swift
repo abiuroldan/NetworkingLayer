@@ -5,6 +5,8 @@
 //  Created by Abiú Ramírez Roldán on 02/03/25.
 //
 
+import Combine
+
 struct FullLIstPokemon {
     let previous: String?
     let result: [ItemPokemon]
@@ -28,5 +30,5 @@ struct ItemPokemon {
 import NetworkingServiceManager
 
 protocol RemoteServiceAPI {
-    func fullPokemonList(_ completion: @escaping (Result<FullLIstPokemon, NetworkError>) -> ())
+    func fetchPokemonList() async throws -> AnyPublisher<FullLIstPokemon, NetworkError>
 }

@@ -92,12 +92,19 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				NetworkingServiceManager/APIRequestType.swift,
+				NetworkingServiceManager/HttpMethod.swift,
 				NetworkingServiceManager/Model.swift,
 				NetworkingServiceManager/NetworkError.swift,
+				NetworkingServiceManager/NetworkErrorMapper.swift,
 				NetworkingServiceManager/NetworkingManager.swift,
+				NetworkingServiceManager/NetworkingManagerService.swift,
 				NetworkingServiceManager/NetworkingServiceManager.h,
 				NetworkingServiceManager/NetworkManagerAPI.swift,
 				NetworkingServiceManager/NetworkManagerAPIService.swift,
+				NetworkingServiceManager/NetworkRequest.swift,
+				"NetworkingServiceManager/Utilities/Extensions/Data+extension.swift",
+				"NetworkingServiceManager/Utilities/Extensions/Encodable+extension.swift",
+				"NetworkingServiceManager/Utilities/Extensions/JSONDecoder+extension.swift",
 			);
 			publicHeaders = (
 				NetworkingServiceManager/NetworkingServiceManager.h,
@@ -107,14 +114,27 @@
 		1E8C8B662D740D2E00493E8C /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				NetworkingServiceManager/Resources/EmptyJsonResponse.json,
+				NetworkingServiceManager/Resources/PokemonList.json,
+				NetworkingServiceManager/Resources/SecondPageResponse.json,
+				NetworkingServiceManagerTests/Mocks/NetworkManagerAPIServiceMock.swift,
 				NetworkingServiceManagerTests/NetworkingServiceManagerTests.swift,
 			);
 			target = 1E8C8B312D740BE000493E8C /* NetworkingServiceManagerTests */;
 		};
+		1EFFE9482D7ED7B500992F58 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				NetworkingServiceManager/Resources/EmptyJsonResponse.json,
+				NetworkingServiceManager/Resources/PokemonList.json,
+				NetworkingServiceManager/Resources/SecondPageResponse.json,
+			);
+			target = 2971A3FA2D696DE3006D1844 /* NetworkingLayer */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1E8C8B252D740BC200493E8C /* CustomFrameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1E8C8B652D740D2E00493E8C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 1E8C8B662D740D2E00493E8C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CustomFrameworks; sourceTree = "<group>"; };
+		1E8C8B252D740BC200493E8C /* CustomFrameworks */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (1EFFE9482D7ED7B500992F58 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 1E8C8B652D740D2E00493E8C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 1E8C8B662D740D2E00493E8C /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = CustomFrameworks; sourceTree = "<group>"; };
 		1EF9C7DC2D715A5E001E897B /* Coordinators */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Coordinators; sourceTree = "<group>"; };
 		1EF9C7E02D715A71001E897B /* Modules */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Modules; sourceTree = "<group>"; };
 		1EF9C7E12D715A83001E897B /* Services */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Services; sourceTree = "<group>"; };
@@ -361,6 +381,7 @@
 					};
 					1E8C8B312D740BE000493E8C = {
 						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
 						TestTargetID = 2971A3FA2D696DE3006D1844;
 					};
 					2971A3FA2D696DE3006D1844 = {
@@ -608,6 +629,7 @@
 		1E8C8B462D740BE000493E8C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V8BU2R2AU8;
@@ -617,6 +639,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = abiu.ramirezroldan.NetworkingServiceManagerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CustomFrameworks/NetworkingServiceManagerTests/NetworkingServiceManagerTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkingLayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NetworkingLayer";
@@ -626,6 +650,7 @@
 		1E8C8B472D740BE000493E8C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V8BU2R2AU8;
@@ -635,6 +660,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = abiu.ramirezroldan.NetworkingServiceManagerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "CustomFrameworks/NetworkingServiceManagerTests/NetworkingServiceManagerTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkingLayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NetworkingLayer";
@@ -821,7 +847,6 @@
 		2971A4292D696DE5006D1844 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -841,7 +866,6 @@
 		2971A42A2D696DE5006D1844 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -861,7 +885,6 @@
 		2971A42C2D696DE5006D1844 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 54B4Q6RGVU;
@@ -879,7 +902,6 @@
 		2971A42D2D696DE5006D1844 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 54B4Q6RGVU;

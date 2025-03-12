@@ -6,158 +6,76 @@
 //
 
 import Foundation
+import Combine
 
-class NetworkManager {
-    let session = URLSession(configuration: .ephemeral)
-    func makeCall<T: Decodable>(request: NetworkRequest, _ type: T.Type, _ completion: @escaping (Result<T, NetworkError>) -> ()) async {
-        if #available(iOS 15.0, *) {
-            do {
-                let data: T = try await perform(request, type: T.self)
-                completion(.success(data))
-            } catch {
-                completion(.failure(error as? NetworkError ?? .invalidResponse))
-            }
-        } else {
-            perform(request, type: T.self) { result in
-                completion(result)
-            }
-        }
-    }
+final class NetworkManager: NetworkingManagerService {
+    private let session: URLSession
 
-    func perform<T: Decodable>(_ request: NetworkRequest, type: T.Type) async throws -> T {
-        if #available(iOS 15.0, *) {
-            /// Use URLSession to fetch the data asynchronously
-            let urlRequest = try request.urlRequest()
-            let (data, response) = try await session.data(for: urlRequest)
-            try processResponse(response)
-            return try decode(T.self, data: data)
-        } else {
-            return try await withCheckedThrowingContinuation { continuation in
-                perform(request, type: T.self) { result in
-                    switch result {
-                    case .success(let data):
-                        continuation.resume(returning: data)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-    }
+    init() {
+        let memoryCapacity = 50 * 1024 * 1024 // 50MB memory cache
+        let diskCapacity = 200 * 1024 * 1024 // 200MB disk cache
+        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity)
+        URLCache.shared = cache // Globally
 
-    func decode<T: Decodable>(_ type: T.Type, data: Data) throws -> T {
-        do {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            let dataDecoded = try decoder.decode(T.self, from: data)
-            return dataDecoded
-        } catch let decodingError {
-            throw NetworkError.decodingFailed(decodingError)
-        }
+        let config = URLSessionConfiguration.ephemeral
+        config.urlCache = URLCache.shared
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        let session = URLSession(configuration: config)
+        self.session = session
     }
 
     private func processResponse(_ response: URLResponse?) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw NetworkError.invalidResponse
+            throw NetworkError.noResponse
         }
-        switch httpResponse.statusCode {
-        case 200...299:
+
+        if(200...299).contains(httpResponse.statusCode) {
             return
-        case 400:
-            throw NetworkError.badRequest
-        case 401:
-            throw NetworkError.unauthorized
-        case 403:
-            throw NetworkError.forbidden
-        case 404:
-            throw NetworkError.notFound
-        case 408:
-            throw NetworkError.requestTimeOut
-        case 500:
-            throw NetworkError.serverError
-        case 502:
-            throw NetworkError.badGatway
-        default:
-            throw NetworkError.unknownError(statusCode: httpResponse.statusCode)
         }
+
+        throw NetworkError.from(statusCode: httpResponse.statusCode)
     }
 }
 
+// MARK: - Combine
 extension NetworkManager {
-    func perform<T: Decodable>(_ request: NetworkRequest, type: T.Type, completion: @escaping (Result<T, NetworkError>) -> Void ) {
-        do {
-            let urlRequest = try request.urlRequest()
-            session.dataTask(with: urlRequest) { [weak self] data, response, error in
-                guard let self else {
-                    completion(.failure(.dataNotFound))
-                    return
-                }
-                if let error = error {
-                    completion(.failure(.requestFailed(error)))
-                    return
+    func fetchData<T: Decodable>(_ request: NetworkRequest, type: T.Type) throws -> AnyPublisher<T, NetworkError> {
+        let urlRequest = try request.urlRequest()
+        let decoder = JSONDecoder(isSnakeCaseConverting: true)
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        // Check if a cached response exists
+        if let cachedResponse = URLCache.shared.cachedResponse(for: urlRequest) {
+            return Just(cachedResponse.data)
+                .decode(type: T.self, decoder: decoder)
+                .mapError(NetworkErrorMapper.map)
+                .eraseToAnyPublisher()
+        }
+
+        return session
+            .dataTaskPublisher(for: urlRequest)
+            .tryMap { [weak self] element -> Data in
+                guard let self else { throw NetworkError.dataNotFound }
+
+                // Handle HTTP response validation errors
+                try self.processResponse(element.response)
+
+                // Ensure data is present
+                guard !element.data.isEmpty else {
+                    throw NetworkError.dataNotFound
                 }
 
-                guard let data else {
-                    completion(.failure(.dataNotFound))
-                    return
-                }
+                // Store response in cache
+                let cachedResponse = CachedURLResponse(response: element.response, data: element.data)
+                URLCache.shared.storeCachedResponse(cachedResponse, for: urlRequest)
 
-                do {
-                    try processResponse(response)
-                    let decodedObject = try decode(T.self, data: data)
-                    completion(.success(decodedObject))
-                } catch {
-                    completion(.failure(error as? NetworkError ?? .invalidResponse))
-                }
+                return element.data
             }
-        } catch {
-            completion(.failure(error as? NetworkError ?? .invalidResponse))
-        }
-    }
-}
-
-protocol NetworkRequest {
-    var url: URL? { get }
-    var method: HttpMethod { get }
-    var headers: [String: String]? { get }
-    var parameters: Encodable? { get }
-}
-
-enum HttpMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-}
-
-extension NetworkRequest {
-    func urlRequest() throws -> URLRequest {
-        guard let url else {
-            throw NetworkError.badURL
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.allHTTPHeaderFields = headers
-        
-        if let parameters = parameters {
-            if method == .get {
-                var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-                let parameterData = try JSONEncoder().encode(parameters)
-                let parameterDictionary = try JSONSerialization.jsonObject(with: parameterData, options: []) as? [String: Any]
-                urlComponents?.queryItems = parameterDictionary?.map { URLQueryItem(name: $0.key, value: "\($0.value)")}
-                request.url = urlComponents?.url
-                request.httpMethod = method.rawValue
-            } else {
-                do {
-                    let jsonData = try JSONEncoder().encode(parameters)
-                    request.httpBody = jsonData
-                } catch {
-                    throw NetworkError.encodingFailed(error)
-                }
-            }
-        }
-
-        return request
+            .decode(type: T.self, decoder: decoder)
+            .mapError(NetworkErrorMapper.map)
+            .timeout(.seconds(10), scheduler: DispatchQueue.global(), customError: { NetworkError.requestTimeOut })
+            .retry(3)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 }

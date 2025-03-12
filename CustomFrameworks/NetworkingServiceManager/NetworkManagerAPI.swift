@@ -5,6 +5,8 @@
 //  Created by Abiú Ramírez Roldán on 02/03/25.
 //
 
+import Combine
+
 public protocol NetworkManagerAPI {
-    func fullPokemonList(request: APIRequestType, _ completion: @escaping (Result<PokemonList, NetworkError>) -> ()) async
+    func fetchPokemonList<T: Decodable>(request: APIRequestType) async throws -> AnyPublisher<T, NetworkError>
 }

@@ -8,12 +8,11 @@
 import UIKit
 import Combine
 
-final class HomeViewController: NiblessViewController {
+final class HomeViewController<model: HomeViewModelProtocol>: NiblessViewController {
     private let rootView = HomeRootView()
-    private let viewModel: HomeViewModelProtocol
-    private var cancellables = [AnyCancellable]()
+    private var viewModel: model
 
-    init(viewModel: HomeViewModelProtocol) {
+    init(viewModel: model) {
         self.viewModel = viewModel
         super.init()
     }
@@ -26,11 +25,20 @@ final class HomeViewController: NiblessViewController {
         super.viewDidLoad()
         viewModel
             .isLoading
-            .sink { isLoading in
-                print(isLoading ? "isLoading..." : "done")
+            .sink { _ in
+                
             }
-            .store(in: &cancellables)
+            .store(in: &viewModel.cancellables)
 
-        viewModel.requestList()
+        viewModel.fetchPokemonList()
+
+        viewModel.pokemonListPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+
+            }
+            .store(in: &viewModel.cancellables)
     }
 }
+

@@ -9,4 +9,5 @@ import Combine
 
 protocol ViewModel {
     var isLoading: AnyPublisher<Bool, Never> { get }
+    var cancellables: Set<AnyCancellable> { get set }
 }

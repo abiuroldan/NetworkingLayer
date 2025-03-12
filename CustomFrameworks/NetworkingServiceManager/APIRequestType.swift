@@ -14,7 +14,7 @@ public enum APIRequestType: NetworkRequest {
     case byId(Int)
     case byName(String)
 
-    internal var url: URL? {
+    public var url: URL? {
         switch self {
         case .byId(let id):
             return URL(string: "\(baseURL)\(id)")
@@ -25,17 +25,17 @@ public enum APIRequestType: NetworkRequest {
         }
     }
 
-    internal var method: HttpMethod {
+    public var method: HttpMethod {
         switch self {
         default: return .get
         }
     }
 
-    internal var headers: [String : String]? {
+    public var headers: [String : String]? {
         ["Content-Type": "application/json"]
     }
 
-    internal var parameters: (any Encodable)? {
+    public var parameters: (any Encodable)? {
         nil
     }
 }

@@ -6,27 +6,46 @@
 //
 
 import Combine
+import NetworkingServiceManager
 
-final class HomeViewModel: HomeViewModelProtocol {
-    let remoteAPI = RemoteService()
+final class HomeViewModel: HomeViewModelProtocol, ObservableObject {
+    let remoteAPI: RemoteServiceAPI
+    var cancellables = Set<AnyCancellable>()
+    @Published private(set) var list: FullLIstPokemon?
+    var pokemonListPublisher: Published<FullLIstPokemon?>.Publisher {
+        $list
+    }
+
+    init(remoteAPI: RemoteServiceAPI = RemoteService()) {
+        self.remoteAPI = remoteAPI
+    }
 
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     var isLoading: AnyPublisher<Bool, Never> {
         isLoadingSubject.eraseToAnyPublisher()
     }
 
-    func requestList() {
+    func fetchPokemonList() {
         isLoadingSubject.send(true)
-        remoteAPI.fullPokemonList { [weak self] result in
-            guard let self else {
-                return
-            }
-            self.isLoadingSubject.send(false)
-            switch result {
-            case .success(let list):
-                print("Full pokemon list: ", list)
-            case .failure(let error):
-                print("request error: ", error)
+
+        Task {
+            do{
+                try await remoteAPI.fetchPokemonList()
+                    .sink { completion in
+                        switch completion {
+                        case .failure(let error):
+                            print("Error: \(error)")
+                        case .finished:
+                            break
+                        }
+                    } receiveValue: { [weak self] list in
+                        guard let self else { return }
+                        self.isLoadingSubject.send(false)
+                        self.list = list
+                    }
+                    .store(in: &cancellables)
+            } catch {
+                print("Error \(error)")
             }
         }
     }
