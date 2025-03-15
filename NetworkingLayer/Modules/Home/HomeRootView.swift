@@ -10,7 +10,6 @@ import UIKit
 final class HomeRootView: NiblessView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        backgroundColor = .background
-        backgroundColor = .darkGray
+        backgroundColor = .background
     }
 }
