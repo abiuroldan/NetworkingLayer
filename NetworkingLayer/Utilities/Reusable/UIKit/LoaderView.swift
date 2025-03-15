@@ -17,7 +17,7 @@ final class SpinnerViewController: NiblessViewController {
 
     override func loadView() {
         view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        view.backgroundColor = .loaderBackground
 
         spinner.translatesAutoresizingMaskIntoConstraints = false
         spinner.accessibilityIdentifier = "SpinnerView" 
@@ -28,6 +28,7 @@ final class SpinnerViewController: NiblessViewController {
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
 
+        spinner.color = .loader
         spinner.startAnimating()
     }
 }
