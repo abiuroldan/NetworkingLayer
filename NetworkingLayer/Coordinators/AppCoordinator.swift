@@ -17,8 +17,8 @@ final class AppCoordinator: Coordinator {
             fatalError("Window can't be empty")
         }
         self.window = window
-        window.makeKeyAndVisible()
         window.rootViewController = navigationController
+        window.makeKeyAndVisible()
     }
 
     func start() {

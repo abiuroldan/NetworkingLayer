@@ -22,5 +22,12 @@ final class HomeViewController: NiblessViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//            if let url = URL(string: "pokemonapp://anything") {
+//                if UIApplication.shared.canOpenURL(url) {
+//                    UIApplication.shared.open(url)
+//                }
+//            }
+//        }
     }
 }
